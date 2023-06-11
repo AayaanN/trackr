@@ -1,11 +1,14 @@
-import tensorflow
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import layers
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime
+from copy import deepcopy
 
-df = pd.read_csv('amzn.csv')
-2.13
+
+df = pd.read_csv('/Users/ernest/Documents/GitHub/portfolio-predictions/flask_backend/api/amzn.csv')
 df = df[['Date', 'Close']]
 
 # convert date from str to int
@@ -15,14 +18,6 @@ def str_to_datetime(s):
   month = int(split[1])
   day = int(split[2])
   return datetime.datetime(year = year, month = month, day = day)
-
-df['Date'] = df['Date'].apply(str_to_datetime)
-
-df.index = df.pop('Date')
-
-# plt.plot(df.index, df['Close'])
-# plt.show()
-
 
 def df_to_windowed_df(dataframe, first_date_str, last_date_str, n=3):
   first_date = str_to_datetime(first_date_str)
@@ -74,11 +69,7 @@ def df_to_windowed_df(dataframe, first_date_str, last_date_str, n=3):
   ret_df['Target'] = Y
 
   return ret_df 
-
-windowed_df = df_to_windowed_df(df, 
-                                '2022-03-3', 
-                                '2023-04-05', 
-                                n=3)
+df['Date'] = df['Date'].apply(str_to_datetime)
 
 def windowed_df_to_date_X_y(windowed_dataframe):
   df_as_np = windowed_dataframe.to_numpy()
@@ -91,6 +82,13 @@ def windowed_df_to_date_X_y(windowed_dataframe):
   Y = df_as_np[:, -1]
 
   return dates, X.astype(np.float32), Y.astype(np.float32)
+
+df.index = df.pop('Date')
+
+plt.plot(df.index, df['Close'])
+
+
+windowed_df = df_to_windowed_df(df, '2022-03-3', '2023-04-05', n=3)
 
 dates, X, y = windowed_df_to_date_X_y(windowed_df)
 
@@ -109,5 +107,60 @@ plt.plot(dates_val, y_val)
 plt.plot(dates_test, y_test)
 
 plt.legend(['Train', 'Validation', 'Test'])
+
+
+model = Sequential([layers.Input((3, 1)),
+                    layers.LSTM(64),
+                    layers.Dense(32, activation='relu'),
+                    layers.Dense(32, activation='relu'),
+                    layers.Dense(1)])
+
+model.compile(loss='mse', 
+              optimizer=Adam(learning_rate=0.001),
+              metrics=['mean_absolute_error'])
+
+model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=100)
+
+train_predictions = model.predict(X_train).flatten()
+
+plt.plot(dates_train, train_predictions)
+plt.plot(dates_train, y_train)
+plt.legend(['Training Predictions', 'Training Observations'])
+
+val_predictions = model.predict(X_val).flatten()
+
+plt.plot(dates_val, val_predictions)
+plt.plot(dates_val, y_val)
+plt.legend(['Validation Predictions', 'Validation Observations'])
+
+test_predictions = model.predict(X_test).flatten()
+
+plt.plot(dates_test, test_predictions)
+plt.plot(dates_test, y_test)
+plt.legend(['Testing Predictions', 'Testing Observations'])
+
+recursive_predictions = []
+recursive_dates = np.concatenate([dates_val, dates_test])
+
+for target_date in recursive_dates:
+  last_window = deepcopy(X_train[-1])
+  next_prediction = model.predict(np.array([last_window])).flatten()
+  recursive_predictions.append(next_prediction)
+  last_window[-1] = next_prediction
+
+plt.plot(dates_train, train_predictions)
+plt.plot(dates_train, y_train)
+plt.plot(dates_val, val_predictions)
+plt.plot(dates_val, y_val)
+plt.plot(dates_test, test_predictions)
+plt.plot(dates_test, y_test)
+plt.plot(recursive_dates, recursive_predictions)
+plt.legend(['Training Predictions', 
+            'Training Observations',
+            'Validation Predictions', 
+            'Validation Observations',
+            'Testing Predictions', 
+            'Testing Observations',
+            'Recursive Predictions'])
 
 plt.show()
