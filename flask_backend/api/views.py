@@ -1,5 +1,8 @@
 from flask import Blueprint, jsonify, request
 import random
+import finnhub
+
+finnhub_client = finnhub.Client(api_key="YOUR API KEY")
 
 main = Blueprint('main', __name__)
 
