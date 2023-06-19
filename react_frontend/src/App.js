@@ -31,6 +31,7 @@ function App() {
 
   return (
     <div className="App">
+      <h1 className='text-6xl p-2'>Trackr</h1>
 
       <Stocks stocks={stocks} />
 
