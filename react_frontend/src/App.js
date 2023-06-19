@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     fetch("/get_data").then(response =>
       response.json().then(data => {
-        set_stocks(data);
+        set_stocks(data.stocks);
       })
     );
   }, []);
@@ -32,7 +32,7 @@ function App() {
   return (
     <div className="App">
 
-      <Stocks>stocks={stocks}</Stocks>
+      <Stocks stocks={stocks} />
 
     </div>
   );

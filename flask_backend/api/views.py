@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 import random
-import finnhub
+# import finnhub
 
-finnhub_client = finnhub.Client(api_key="YOUR API KEY")
+# finnhub_client = finnhub.Client(api_key="YOUR API KEY")
 
 main = Blueprint('main', __name__)
 
@@ -17,7 +17,7 @@ def add_data():
 
 def get_data():
 
-    stocks = []
+    stocks = [{'name':'AAPL', 'price': 200}, {'name':'AMZN', 'price': 300}]
 
     return jsonify({'stocks':stocks})
 

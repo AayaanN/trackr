@@ -1,0 +1,17 @@
+.stock-list{
+    display: flex;
+    flex-direction: column;
+    padding-top: 5%;
+}
+
+.stock-item{
+    display:flex;
+    /* justify-content: flex-end; */
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding-left: 2%;
+}
+
+.price{
+    margin-left: 10px;
+}
