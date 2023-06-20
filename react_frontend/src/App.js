@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React, {useEffect, useState} from "react"
 import {Stocks} from './components/stocks'
+import {Search} from './components/search'
 
 function App() {
 
@@ -31,8 +32,9 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className='text-6xl p-2'>Trackr</h1>
+      <h1 className='text-6xl p-2 text-white mt-4'>Trackr</h1>
 
+      <Search></Search>
       <Stocks stocks={stocks} />
 
     </div>

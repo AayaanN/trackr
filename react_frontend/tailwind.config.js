@@ -2,7 +2,10 @@
 module.exports = {
   content: ["./src/**/*.{html,js,css}", "./node_modules/flowbite/**/*.js"],
   theme: {
-    extend: {},
+    extend: {colors: {
+      ...require('tailwindcss/defaultTheme').colors,
+      dark_bg: '#1B262C', // Your custom color
+    },},
   },
   plugins: [
     require('flowbite/plugin')

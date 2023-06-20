@@ -15,9 +15,9 @@ def add_data():
 
     price_data = random.randint(1, 500)
 
-    name_data = ''.join(random.choice(string.ascii_uppercase) for _ in range(4))
+    name_data = request.json['query']
 
-    new_stock = Stock(name = name_data, price = price_data)
+    new_stock = Stock(name = name_data.upper(), price = price_data)
 
     db.session.add(new_stock)
 
