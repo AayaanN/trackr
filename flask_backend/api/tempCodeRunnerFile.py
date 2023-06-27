@@ -1,1 +1,5 @@
-# from tensorflow.keras.models import Sequential
+ # print(df)
+
+    # plt.plot(df.index, df['Close'])
+
+    # plt.show()
