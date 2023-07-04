@@ -4,7 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__,  template_folder="template")
+
+    # app.debug = True
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:fiutest123@localhost/portfolio_tracker_db'
 

@@ -11,4 +11,10 @@ class Stock(db.Model):
     # time = db.Column(db.TIMESTAMP(timezone = True), default = datetime.now(timezone('EST')))
     time = db.Column(db.TIMESTAMP(timezone = True), default=lambda: datetime.now(timezone('EST')))
     name = db.Column(db.String(16))
-    price = db.Column(db.Integer)
+    price = db.Column(db.Float)
+    prev_price = db.Column(db.Float)
+    change = db.Column(db.Float)
+    percent_change = db.Column(db.Float)
+
+
+

@@ -27,16 +27,20 @@ function App() {
         set_stocks(data.stocks);
       })
     );
-  }, []);
+  }, [stocks]);
 
 
   return (
     <div className="App">
-      <h1 className='text-6xl p-2 text-white mt-4'>Trackr</h1>
+      <div className='mt-5'>
+        <h1 className=' flex text-6xl p-2 text-white mt-10 justify-center'>Trackr</h1>
 
-      <Search></Search>
-      <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
+        <Search></Search>
+        <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
 
+
+      </div>
+  
     </div>
   );
 }
