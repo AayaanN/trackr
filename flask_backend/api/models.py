@@ -15,6 +15,12 @@ class Stock(db.Model):
     prev_price = db.Column(db.Float)
     change = db.Column(db.Float)
     percent_change = db.Column(db.Float)
+    amount = db.Column(db.Float)
+    price_bought_at = db.Column(db.Float)
+    average_price = db.Column(db.Float)
+    value = db.Column(db.Float)
+
+
 
 
 

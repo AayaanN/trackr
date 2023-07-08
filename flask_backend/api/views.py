@@ -20,21 +20,31 @@ def add_data():
 
 
     name_data = request.json['query'].upper()
+    amount_data = request.json['amount']
 
     url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={name_data}&apikey={api_key}'
     response = requests.get(url)
     data = response.json()
 
-    if data['Global Quote']:
+    if data['Global Quote'] and amount_data is not None:
+
         stock_data = data['Global Quote']
+
         current_price = float(stock_data['05. price']) + 0.00
 
         previous_close = float(stock_data['08. previous close'])
 
         change = current_price - previous_close
+
         percent_change = (change / previous_close) * 100
 
-        new_stock = Stock(name = name_data, price = current_price, prev_price=previous_close, change=change, percent_change=percent_change)
+        price_bought_at = current_price
+
+        average_price = current_price
+
+        value = average_price * 2
+
+        new_stock = Stock(name = name_data, price = current_price, prev_price=previous_close, change=change, percent_change=percent_change, amount=amount_data, price_bought_at=price_bought_at, average_price=average_price, value=value)
         db.session.add(new_stock)
         db.session.commit()
     else:
@@ -54,7 +64,7 @@ def get_data():
     stocks = []
 
     for stock in stock_list:
-        stocks.append({'name': stock.name, 'price': stock.price, 'prev_price': stock.prev_price, 'change':stock.change, 'percent_change': stock.percent_change})
+        stocks.append({'name': stock.name, 'price': stock.price, 'prev_price': stock.prev_price, 'change':stock.change, 'percent_change': stock.percent_change, 'amount': stock.amount, 'price_bought_at': stock.price_bought_at, 'average_price': stock.average_price, 'value':stock.value})
 
     return jsonify({'stocks':stocks})
 
@@ -100,3 +110,42 @@ def already_added():
     
     
     return jsonify({'added': False})
+
+@main.route('/increase_amount', methods = ['PUT'])
+
+def increase_amount():
+    try:
+        stock_name = request.json['selected_stock'].upper()
+
+        url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock_name}&apikey={api_key}'
+
+        response = requests.get(url)
+        data = response.json()
+
+        stock_data = data['Global Quote']
+
+        current_price = float(stock_data['05. price']) + 0.00
+
+
+        row = Stock.query.filter_by(name=stock_name).order_by(Stock.id).first()
+
+        if row is None:
+            return 'row does not exist, error', 404
+
+
+        row.average_price = (row.average_price*row.value + current_price)/(row.amount + 1)
+
+        row.amount += 1
+
+        db.session.commit()
+
+        return "row updated successfully"
+    
+    except Exception as e:
+        print(e)
+
+
+@main.route('/decrease_amount', methods = ['PUT'])
+
+def decrease_amount():
+    return
