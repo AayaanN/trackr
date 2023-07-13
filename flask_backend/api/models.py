@@ -20,6 +20,16 @@ class Stock(db.Model):
     average_price = db.Column(db.Float)
     value = db.Column(db.Float)
 
+class Portfolio_Log(db.Model):
+    __tablename__ = 'Portfolio_Logs'
+    id = db.Column(db.Integer, primary_key = True)
+    # time = db.Column(db.TIMESTAMP(timezone = True), default = datetime.now(timezone('EST')))
+    time = db.Column(db.TIMESTAMP(timezone = True), default=lambda: datetime.now(timezone('EST')))
+    value = db.Column(db.Float)
+    initial_value = db.Column(db.Float)
+    change = db.Column(db.Float)
+    percent_change = db.Column(db.Float)
+
 
 
 

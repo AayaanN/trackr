@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request
 import random
-from .models import Stock
+from .models import Stock, Portfolio_Log
 from . import db
 import string
 import requests
+from sqlalchemy import desc
 # import finnhub
 
 # finnhub_client = finnhub.Client(api_key="YOUR API KEY")
@@ -17,16 +18,17 @@ main = Blueprint('main', __name__)
 
 def add_data():
 
+    data = request.json
+    name_data = data['query'].upper()
+    amount_data = int(data['amount'])
 
-
-    name_data = request.json['query'].upper()
-    amount_data = request.json['amount']
+    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
 
     url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={name_data}&apikey={api_key}'
     response = requests.get(url)
     data = response.json()
 
-    if data['Global Quote'] and amount_data is not None:
+    if data['Global Quote'] and amount_data is not None and portfolio:
 
         stock_data = data['Global Quote']
 
@@ -42,16 +44,72 @@ def add_data():
 
         average_price = current_price
 
-        value = average_price * 2
+        value = average_price * amount_data
 
         new_stock = Stock(name = name_data, price = current_price, prev_price=previous_close, change=change, percent_change=percent_change, amount=amount_data, price_bought_at=price_bought_at, average_price=average_price, value=value)
+        
+        #adding to portfolio db
+        new_value = portfolio.value + value
+
+        new_portfolio_log = Portfolio_Log(value=new_value, initial_value=new_value, change=portfolio.change, percent_change=portfolio.percent_change)
+
         db.session.add(new_stock)
+        db.session.add(new_portfolio_log)
         db.session.commit()
-    else:
-        return 'There was an error'
+
+        return jsonify({'ok'})
 
 
-    return 'added'
+
+
+# def add_data():
+
+#     name_data = request.json['query'].upper()
+#     amount_data = request.json['amount']
+
+#     url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={name_data}&apikey={api_key}'
+#     response = requests.get(url)
+#     data = response.json()
+
+#     # portfolio = Stock.query.order_by(desc(Stock.id)).first()
+#     # try:
+#     if data['Global Quote'] and amount_data is not None:
+
+#         # adding to stock_db
+#         stock_data = data['Global Quote']
+
+#         current_price = float(stock_data['05. price']) + 0.00
+
+#         previous_close = float(stock_data['08. previous close'])
+
+#         change = current_price - previous_close
+
+#         percent_change = (change / previous_close) * 100
+
+#         price_bought_at = current_price
+
+#         average_price = current_price
+
+#         value = average_price * amount_data
+
+#         new_stock = Stock(name = name_data, price = current_price, prev_price=previous_close, change=change, percent_change=percent_change, amount=amount_data, price_bought_at=price_bought_at, average_price=average_price, value=value)
+        
+#         #adding to portfolio db
+#         # new_value = portfolio.value + value
+
+#         # new_portfolio_log = Portfolio_Log(value=new_value, initial_value=new_value, change=portfolio.change, percent_change=portfolio.percent_change)
+
+#         db.session.add(new_stock)
+#         # db.session.add(new_portfolio_log)
+#         db.session.commit()
+
+#         return 'ok'
+
+#     # except Exception as e:
+#     #     return ('ahhh')
+
+
+#     return 'added'
 
 @main.route('/get_data', methods = ['GET'])
 
@@ -59,7 +117,7 @@ def get_data():
 
     # stocks = [{'name':'AAPL', 'price': 200}, {'name':'AMZN', 'price': 300}]
 
-    stock_list = Stock.query.all()
+    stock_list = Stock.query.order_by(Stock.id).all()
 
     stocks = []
 
@@ -67,6 +125,16 @@ def get_data():
         stocks.append({'name': stock.name, 'price': stock.price, 'prev_price': stock.prev_price, 'change':stock.change, 'percent_change': stock.percent_change, 'amount': stock.amount, 'price_bought_at': stock.price_bought_at, 'average_price': stock.average_price, 'value':stock.value})
 
     return jsonify({'stocks':stocks})
+
+@main.route('/get_portfolio', methods = ['GET'])
+
+def get_portfolio():
+
+    # stocks = [{'name':'AAPL', 'price': 200}, {'name':'AMZN', 'price': 300}]
+
+    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+
+    return jsonify({'portfolio':[{'time': portfolio.time, 'change': portfolio.change, 'percent_change': portfolio.percent_change, 'initial_value': portfolio.initial_value, 'value': portfolio.value}]})
 
 
 @main.route('/check_stock', methods = ['POST'])
@@ -111,31 +179,86 @@ def already_added():
     
     return jsonify({'added': False})
 
+
+
 @main.route('/increase_amount', methods = ['PUT'])
 
 def increase_amount():
     try:
         stock_name = request.json['selected_stock'].upper()
+        # stock_name = 'AAPL'
 
-        url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock_name}&apikey={api_key}'
+        # url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock_name}&apikey={api_key}'
 
-        response = requests.get(url)
-        data = response.json()
+        # response = requests.get(url)
+        # data = response.json()
 
-        stock_data = data['Global Quote']
+        # stock_data = data['Global Quote']
 
-        current_price = float(stock_data['05. price']) + 0.00
+        # current_price = float(stock_data['05. price']) + 0.00
 
 
         row = Stock.query.filter_by(name=stock_name).order_by(Stock.id).first()
+
+        portfolio = Stock.query.order_by(desc(Stock.id)).first()
+
 
         if row is None:
             return 'row does not exist, error', 404
 
 
-        row.average_price = (row.average_price*row.value + current_price)/(row.amount + 1)
+        # row.average_price = (row.average_price*row.amount + current_price)/(row.amount + 1)
 
         row.amount += 1
+
+        new_value = portfolio.value + row.average_price
+
+        new_portfolio_log = Portfolio_Log(value=new_value, initial_value=new_value, change=portfolio.change, percent_change=portfolio.percent_change)
+
+        db.session.add(new_portfolio_log)
+
+        db.session.commit()
+
+        return "row updated successfully"
+    
+    except Exception as e:
+        print(e, 'ahhhh help an error')
+
+        return 'oopsy'
+
+
+@main.route('/decrease_amount', methods=['PUT'])
+
+def decrease_amount():
+    try:
+        stock_name = request.json['selected_stock'].upper()
+
+        # url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock_name}&apikey={api_key}'
+
+        # response = requests.get(url)
+        # data = response.json()
+
+        # stock_data = data['Global Quote']
+
+        # current_price = float(stock_data['05. price']) + 0.00
+
+        row = Stock.query.filter_by(name=stock_name).order_by(Stock.id).first()
+
+        portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+
+
+        if row is None:
+            return 'row does not exist, error', 404
+
+        if row.amount != 0:
+            row.amount -= 1
+
+            new_value = portfolio.value - row.average_price
+
+            new_portfolio_log = Portfolio_Log(value=new_value, initial_value=new_value, change=portfolio.change, percent_change=portfolio.percent_change)
+
+            db.session.add(new_portfolio_log)
+
 
         db.session.commit()
 
@@ -144,8 +267,33 @@ def increase_amount():
     except Exception as e:
         print(e)
 
+    return "error occurred"  # Add a return statement here
 
-@main.route('/decrease_amount', methods = ['PUT'])
+@main.route('/delete_stock', methods=['DELETE'])
 
-def decrease_amount():
-    return
+def delete_stock():
+
+    stock_name = request.json['selected_stock'].upper()
+
+    row = Stock.query.filter_by(name=stock_name).order_by(Stock.id).first()
+
+    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+
+
+
+    if row:
+
+        new_value = portfolio.value - (row.average_price * row.amount)
+
+        new_portfolio_log = Portfolio_Log(value=new_value, initial_value=new_value, change=portfolio.change, percent_change=portfolio.percent_change)
+
+        db.session.add(new_portfolio_log)
+
+        db.session.delete(row)
+
+        db.session.commit()
+        return jsonify({'message': 'Stock deleted successfully'})
+    else:
+        return jsonify({'error': 'Stock not found'})
+
+   
