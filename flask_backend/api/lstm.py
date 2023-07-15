@@ -1,6 +1,7 @@
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras import layers
+import tensorflow
+from keras import Sequential
+from keras.optimizers import Adam
+from keras import layers
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

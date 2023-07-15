@@ -2,7 +2,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import layers
 import pandas as pd
-import pandas_market_calendars as mcal
+# import pandas_market_calendars as mcal
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
@@ -10,6 +10,8 @@ from copy import deepcopy
 import requests
 import json
 import array
+import pytz
+# import holidays
 
 
 # url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol='+x+'&outputsize=full&apikey=JU7L288S6R939NEC'
@@ -43,6 +45,34 @@ def file_parse(data):
         for index in df.index:
             if index > 300:
                 df.drop([index], inplace = True)
+
+        return(df)
+    
+def file_parse_all(data):
+    with open( "data_file.json" , "w" ) as write:
+        json.dump( data["Time Series (Daily)"] , write )
+
+    with open("data_file.json", "r") as read_content:
+        stock_dict = json.load(read_content)
+        dates = []
+        dates_keys = stock_dict.keys()
+        for key in dates_keys:
+            dates.append(key)
+        val = stock_dict.values()
+        close = []
+
+        for value in val:
+            close.append(float(value["5. adjusted close"]))
+            
+        
+        
+        list_of_tuples = list(zip(dates, close))
+
+        df = pd.DataFrame(list_of_tuples,
+                    columns=['Date', 'Close']) 
+    
+        df= df.loc[::-1]
+
 
         return(df)
 
@@ -131,12 +161,32 @@ def find_next_day(today):
     
     return tmr
 
+    # tz = pytz.timezone('US/Eastern')
+    # us_holidays = holidays.US()
+    # if 
+
+
+def number_of_days_display(days, df):
+   if days == "Max" or "max":
+      return df
+   elif days == "5D":
+      return df.tail(5)
+   elif days =="1M":
+      return df.tail(30)
+   elif days =="1Y":
+      return df.tail(365)
+   elif days =="5Y":
+      return df.tail(1,825)
+      
+
 def lstm_main():
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AMZN&outputsize=full&apikey=JU7L288S6R939NEC'
     r = requests.get(url)
 
     data = r.json()
     df = file_parse(data)
+
+    df_backup = file_parse_all(data)
 
     start = (df['Date'].iloc[3])
     end = (df['Date'].iloc[-1])
@@ -184,7 +234,8 @@ def lstm_main():
     dates_test = dates_test.tolist()
 
     today = datetime.now().date()
-    next_day = find_next_day(today)
+    # next_day = find_next_day(today)
+    next_day = today + timedelta(days = 1)
     next_day = next_day.strftime('%Y-%m-%dT00:00:00')
     dates_test.append(pd.Timestamp(next_day))
     dates_test= np.array(dates_test)
@@ -203,27 +254,16 @@ def lstm_main():
        for j in value_full:
           full_graph[i] = j
 
-    return(full_graph)
+    before = number_of_days_display("1M", df_backup)
 
-    # # plt.plot(dates_train, train_predictions)
-    # plt.plot(dates_train, y_train)
-    # # plt.plot(dates_val, val_predictions)
-    # plt.plot(dates_val, y_val)
-    # # plt.plot(dates_test, test_predictions)
-    # plt.plot(dates_test, y_test)
-    # # plt.legend(['Training Predictions',
-    # #             'Training Observations',
-    # #             'Validation Predictions',
-    # #             'Validation Observations',
-    # #             'Testing Predictions',
-    # #             'Testing Observations'])
+    # before = before.tolist()
+    # before.append(y_test[-1])
+    # before = np.array(before)
 
-    # plt.legend(['Training Observations',
-    #             'Validation Observations',
-    #             'Testing Observations'])
-    
-    # plt.show()
+    return y_test[-1]
 
+
+    # print(full_graph)
 
 
 
