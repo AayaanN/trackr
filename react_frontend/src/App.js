@@ -3,6 +3,7 @@ import './App.css';
 import React, {useEffect, useState} from "react"
 import {Stocks} from './components/stocks'
 import {Search} from './components/search'
+import GraphComponent from './components/portfolio_graph';
 
 function App() {
 
@@ -32,11 +33,18 @@ function App() {
 
   return (
     <div className="App">
-      <div className='mt-5'>
-        <h1 className=' flex text-6xl p-2 text-white mt-10 justify-center'>Trackr</h1>
+      <h1 className=' flex text-6xl p-2 text-white mt-10 justify-center'>Trackr</h1>
+      <div className='mt-5 flex'>
 
-        <Search></Search>
-        <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
+        <div className='flex flex-col'>
+          <Search></Search>
+          <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
+        </div>
+        
+        <div className='flex-1 h-screen'>
+          <GraphComponent></GraphComponent>
+        </div>
+        
 
 
       </div>

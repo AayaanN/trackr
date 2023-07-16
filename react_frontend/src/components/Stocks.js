@@ -39,14 +39,14 @@ const delete_stock = async (selected_stock) => {
 
 export const Stocks = ({ stocks, on_select_stock, selected_stock }) => {
 
-  const [value, setValue] = useState(7)
+  const [value, setValue] = useState(0)
 
   useEffect(() => {
     fetch('/get_portfolio').then(
       response => response.json().then(
         data => {
-          setValue(data.value)
-          console.log('value:', data)
+          setValue(data.portfolio.value)
+          console.log('value:', data.portfolio.value)
         }
       )
     )
@@ -58,7 +58,7 @@ export const Stocks = ({ stocks, on_select_stock, selected_stock }) => {
 
           <button className={`flex flex-col bg-blue-800 rounded shadow-xl h-40 w-80 hover:bg-blue-900 p-3 m-1 mb-2 ${selected_stock === 'portfolio' ? 'border-2 border-blue-500 bg-blue-900' : 'border-transparent border-2'}`} onClick={() => { on_select_stock('portfolio'); }}>
             <h2 className="text-2xl text-white flex-1">My Portfolio</h2>
-            <p className="text-xl text-white font-medium mt-2">Value: {value}</p>
+            <p className="text-xl text-white font-medium mt-2">Value: {value.toFixed(2)}</p>
 
           </button>
       

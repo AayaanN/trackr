@@ -22,7 +22,9 @@ def add_data():
     name_data = data['query'].upper()
     amount_data = int(data['amount'])
 
-    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+    # portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+
+    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.time)).first()
 
     url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={name_data}&apikey={api_key}'
     response = requests.get(url)
@@ -132,9 +134,12 @@ def get_portfolio():
 
     # stocks = [{'name':'AAPL', 'price': 200}, {'name':'AMZN', 'price': 300}]
 
-    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+    # portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
 
-    return jsonify({'portfolio':[{'time': portfolio.time, 'change': portfolio.change, 'percent_change': portfolio.percent_change, 'initial_value': portfolio.initial_value, 'value': portfolio.value}]})
+    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.time)).first()
+
+
+    return jsonify({'portfolio':{'time': portfolio.time, 'change': portfolio.change, 'percent_change': portfolio.percent_change, 'initial_value': portfolio.initial_value, 'value': portfolio.value}})
 
 
 @main.route('/check_stock', methods = ['POST'])
@@ -200,7 +205,9 @@ def increase_amount():
 
         row = Stock.query.filter_by(name=stock_name).order_by(Stock.id).first()
 
-        portfolio = Stock.query.order_by(desc(Stock.id)).first()
+        # portfolio = Stock.query.order_by(desc(Stock.id)).first()
+
+        portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.time)).first()
 
 
         if row is None:
@@ -244,7 +251,9 @@ def decrease_amount():
 
         row = Stock.query.filter_by(name=stock_name).order_by(Stock.id).first()
 
-        portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+        # portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+
+        portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.time)).first()
 
 
         if row is None:
@@ -277,7 +286,9 @@ def delete_stock():
 
     row = Stock.query.filter_by(name=stock_name).order_by(Stock.id).first()
 
-    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+    # portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
+
+    portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.time)).first()
 
 
 
@@ -297,3 +308,11 @@ def delete_stock():
         return jsonify({'error': 'Stock not found'})
 
    
+@main.route('/graph_portfolio', methods=['GET'])
+
+def graph_portfolio():
+
+    data = Portfolio_Log.query.all()
+    graph_data = [ {'time': row.time.strftime('%Y-%m-%d %H:%M:%S.%f%z'), 'value': row.value} for row in data ]
+    
+    return jsonify(graph_data)
