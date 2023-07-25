@@ -33,7 +33,10 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className=' flex text-6xl p-2 text-white mt-10 justify-center'>Trackr</h1>
+      <div className='mt-10 mb-10'>
+        <h1 className=' flex text-6xl p-2 text-white  justify-center'>Trackr</h1>
+      </div>
+      
       <div className='mt-5 flex'>
 
         <div className='flex flex-col'>
@@ -41,7 +44,7 @@ function App() {
           <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
         </div>
         
-        <div className='flex-1 h-screen'>
+        <div className='flex h-screen w-full'>
           <GraphComponent></GraphComponent>
         </div>
         

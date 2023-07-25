@@ -313,6 +313,6 @@ def delete_stock():
 def graph_portfolio():
 
     data = Portfolio_Log.query.all()
-    graph_data = [ {'time': row.time.strftime('%Y-%m-%d %H:%M:%S.%f%z'), 'value': row.value} for row in data ]
-    
+    graph_data = [ {'time': row.time.strftime('%Y-%m-%d %H:%M:%S.'), 'value': row.value} for row in data ]
+
     return jsonify(graph_data)
