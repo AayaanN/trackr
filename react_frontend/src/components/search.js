@@ -105,19 +105,19 @@ export const Search = () => {
                 placeholder="Add Stock"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="border border-gray-300 px-4 py-2 rounded-l-md  ml-4 w-36"
+                className="border border-gray-300 px-4 py-2 rounded-l-lg  ml-4 w-36"
               />
               <input 
                 type="text"
                 placeholder="Amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="border border-gray-300 px-4 py-2 rounded-r-md mr-2 w-24"
+                className="border border-gray-300 px-4 py-2 rounded-r-lg mr-2 w-24"
               />
         
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-md h-10"
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg h-10"
               >
                 Submit
               </button>

@@ -49,7 +49,7 @@ const NewsComponent = ({selected_stock}) => {
     <div className='w-full'>
       
       <a href={news.url} target="_blank" rel="noopener noreferrer" >
-        <div className='flex neumorphic-shadow rounded-xl bg-gradient-to-r from-slate-600 to-slate-700 w-4/5 h-60 mx-40 hover:from-slate-700 hover:to-slate-700'>
+        <div className='flex neumorphic-shadow rounded-xl bg-gray-900 w-4/5 h-60 mx-40 hover:bg-[#0B1019] '>
           <img src={news.image} className='rounded-xl h-52 w-52 object-cover m-4'></img>
           <div className='flex flex-col m-3'>
             <div>
