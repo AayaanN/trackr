@@ -44,11 +44,25 @@ const NewsComponent = ({selected_stock}) => {
 
     }
 
+
   return (
-    <div>
-        <p>{news.stock_name}</p>
-        <p>{news.article_name}</p>
-      Hello
+    <div className='w-full'>
+      
+      <a href={news.url} target="_blank" rel="noopener noreferrer" >
+        <div className='flex neumorphic-shadow rounded-xl bg-gradient-to-r from-slate-600 to-slate-700 w-4/5 h-60 mx-40 hover:from-slate-700 hover:to-slate-700'>
+          <img src={news.image} className='rounded-xl h-52 w-52 object-cover m-4'></img>
+          <div className='flex flex-col m-3'>
+            <div>
+              <p className='text-white font-bold text-2xl'>{news.publisher_name}</p>
+              <p className='text-white font-bold text-2xl'>{news.time}</p>
+            </div>
+    
+            <p className='text-white font-semibold text-2xl'>{news.article_name}</p>
+          </div>
+          
+        </div>
+        
+      </a>
     </div>
   );
 };

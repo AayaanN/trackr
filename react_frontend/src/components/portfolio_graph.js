@@ -64,7 +64,7 @@ const GraphComponent = () => {
       {
         label: 'Portfolio Value',
         data: data.map((entry) => entry.value),
-        borderColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgb(59 130 246)',
         tension: 0.1,
       },
     ],
@@ -85,11 +85,11 @@ const GraphComponent = () => {
   return (
     <div className='w-full'>
       {/* <h1>Graph Component</h1> */}
-      <div className='w-full content-center mx-20' style={{ width: '85%', height: '60vh' }}>
+      <div className='w-full content-center mx-20 ' style={{ width: '85%', height: '60vh' }}>
         {/* Set width and height as per your requirement */}
         <Line data={chartData} options={chartOptions} />
       </div>
-      <div className='flex inline-block mt-12 '>
+      <div className='flex inline-block mt-12'>
         
         <div className='flex flex-col'>
             <div className='flex'>

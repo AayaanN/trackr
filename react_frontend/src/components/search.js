@@ -97,39 +97,42 @@ export const Search = () => {
   };
 
   return (
-    <div className='flex items-center'>
-      <form onSubmit={handleSubmit} className="flex items-center ">
-        <input 
-          type="text"
-          placeholder="Add Stock"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-l-md  ml-4 w-36"
-        />
-         <input 
-          type="text"
-          placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-r-md mr-2 w-24"
-        />
-  
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md h-10"
-        >
-          Submit
-        </button>
-      
-      </form>
-      {isErrorVisible ? (
-      <div className="flex justify-center items-center ml-2">
-        <p className="text-white bg-red-500 rounded-lg w-10 h-10 flex justify-center items-center">X</p>
-      </div>
-    ) : null}
+    <div className=' shadow-xl shadow-black' style={{ zIndex: '9999' , position: 'relative' }}>
+      <div className='flex items-center w-36'>
+            <form onSubmit={handleSubmit} className="flex items-center ">
+              <input 
+                type="text"
+                placeholder="Add Stock"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="border border-gray-300 px-4 py-2 rounded-l-md  ml-4 w-36"
+              />
+              <input 
+                type="text"
+                placeholder="Amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="border border-gray-300 px-4 py-2 rounded-r-md mr-2 w-24"
+              />
+        
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md h-10"
+              >
+                Submit
+              </button>
+            
+            </form>
+            {isErrorVisible ? (
+            <div className="flex justify-center items-center ml-2">
+              <p className="text-white bg-red-500 rounded-lg w-10 h-10 flex justify-center items-center">X</p>
+            </div>
+          ) : null}
 
 
+          </div>
     </div>
+    
 
     
   );

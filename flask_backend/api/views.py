@@ -13,7 +13,7 @@ from .search_logic import news_search
 
 # finnhub_client = finnhub.Client(api_key="YOUR API KEY")
 
-api_key = 'DNWQMLFC43J1PHDI'
+api_key = 'K62KTSJBG30692AL'
 
 
 main = Blueprint('main', __name__)
@@ -61,7 +61,7 @@ def add_data():
 
         article_data = news_search(name_data)[0]
 
-        new_article = News_Item(stock_name=name_data, article_name= article_data['title'], article_description= article_data['description'], url= article_data['url'], image= article_data['image'], publisher_url= article_data['source']['url'], publisher_name= article_data['source']['name'])
+        new_article = News_Item(time=article_data['publishedAt'], stock_name=name_data, article_name= article_data['title'], article_description= article_data['description'], url= article_data['url'], image= article_data['image'], publisher_url= article_data['source']['url'], publisher_name= article_data['source']['name'])
 
         db.session.add(new_stock)
         db.session.add(new_article)

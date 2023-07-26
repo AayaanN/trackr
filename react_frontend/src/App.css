@@ -35,6 +35,16 @@
   color: #61dafb;
 }
 
+.neumorphic-shadow {
+
+
+  box-shadow: 
+    6px 6px 9px 0 rgba(0, 0, 0, 0.25),
+    -6px -6px 9px 0 rgba(92, 92, 92, 0.3);
+
+    
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

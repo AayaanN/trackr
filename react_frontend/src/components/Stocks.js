@@ -42,7 +42,7 @@ export const Stocks = ({ stocks, on_select_stock, selected_stock }) => {
 
   const [value, setValue] = useState(0)
 
-  console.log('selected stock stocks.js', selected_stock)
+  // console.log('selected stock stocks.js', selected_stock)
 
   useEffect(() => {
     
@@ -60,7 +60,7 @@ export const Stocks = ({ stocks, on_select_stock, selected_stock }) => {
     <div className="flex overflow-y-auto h-full">
       <ul className="space-y-1 w-80 ml-4 mt-10 mb-10">
 
-          <button className={`flex flex-col bg-blue-800 rounded shadow-xl h-40 w-80 hover:bg-blue-900 p-3 m-1 mb-2 ${selected_stock === 'portfolio' ? 'border-2 border-blue-500 bg-blue-900' : 'border-transparent border-2'}`} onClick={() => { on_select_stock('portfolio'); }}>
+          <button className={`flex flex-col bg-gradient-to-r from-blue-700 to-blue-800 rounded-lg shadow-xl h-40 w-80 hover:from-blue-800 hover:to-blue-800 p-3 m-1 mb-6 ${selected_stock === 'portfolio' ? 'border-2 border-blue-500 from-blue-800 to-blue-800' : 'border-transparent border-2'}`} onClick={() => { on_select_stock('portfolio'); }}>
             <h2 className="text-2xl text-white flex-1">My Portfolio</h2>
             <p className="text-xl text-white font-medium mt-2">Value: {value.toFixed(2)}</p>
 
@@ -69,8 +69,8 @@ export const Stocks = ({ stocks, on_select_stock, selected_stock }) => {
         {stocks.map(stock => (
           <li key={stock.name} className="p-1">
             <button
-              className={`flex flex-col bg-slate-500 rounded shadow-xl h-30 w-80 hover:bg-slate-600 p-3 ${
-                selected_stock === stock.name ? 'border-2 border-blue-500 bg-slate-600' : 'border-transparent border-2'
+              className={`flex flex-col bg-gradient-to-r from-slate-600 to-slate-700 rounded-lg shadow neumorphic-shadow h-30 w-80 hover:from-slate-700 hover:to-slate-700 p-3 mb-3 ${
+                selected_stock === stock.name ? 'border-2 border-blue-500 from-slate-700 to-slate-700' : 'border-transparent border-2'
               }`}
               onClick={() => on_select_stock(stock.name)}
             >
@@ -97,7 +97,7 @@ export const Stocks = ({ stocks, on_select_stock, selected_stock }) => {
               <div className="flex">
                 <p className="text-white mb-2 font-bold mr-20 w-12">{stock.price}</p>
                 <p
-                  className={`text-white font-bold rounded-lg p-1 mb-3 w-36 ${
+                  className={`text-white font-bold rounded-lg shadow-inner-md p-1 mb-3 w-36 ${
                     stock.percent_change > 0 ? 'bg-green-500' : stock.percent_change < 0 ? 'bg-red-500' : 'bg-slate-400'
                   }`}
                 >

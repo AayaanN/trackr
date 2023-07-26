@@ -41,8 +41,10 @@ function App() {
         
       {/* </div> */}
 
+      <div className='mb-10'>
+        <h1 className=' flex text-6xl p-2 text-white justify-center'>Trackr</h1>
+      </div>
       
-      <h1 className=' flex text-6xl p-2 text-white justify-center'>Trackr</h1>
 
       
       
