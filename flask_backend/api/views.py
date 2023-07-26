@@ -1,11 +1,15 @@
 from flask import Blueprint, jsonify, request
 import random
-from .models import Stock, Portfolio_Log
+from .models import Stock, Portfolio_Log, News_Item
 from . import db
 import string
 import requests
 from sqlalchemy import desc
+import json
+import urllib.request
+from .search_logic import news_search
 # import finnhub
+
 
 # finnhub_client = finnhub.Client(api_key="YOUR API KEY")
 
@@ -55,7 +59,12 @@ def add_data():
 
         new_portfolio_log = Portfolio_Log(value=new_value, initial_value=new_value, change=portfolio.change, percent_change=portfolio.percent_change)
 
+        article_data = news_search(name_data)[0]
+
+        new_article = News_Item(stock_name=name_data, article_name= article_data['title'], article_description= article_data['description'], url= article_data['url'], image= article_data['image'], publisher_url= article_data['source']['url'], publisher_name= article_data['source']['name'])
+
         db.session.add(new_stock)
+        db.session.add(new_article)
         db.session.add(new_portfolio_log)
         db.session.commit()
 
@@ -290,6 +299,7 @@ def delete_stock():
 
     portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.time)).first()
 
+    article = News_Item.query.filter_by(stock_name=stock_name).first()
 
 
     if row:
@@ -301,6 +311,8 @@ def delete_stock():
         db.session.add(new_portfolio_log)
 
         db.session.delete(row)
+
+        db.session.delete(article)
 
         db.session.commit()
         return jsonify({'message': 'Stock deleted successfully'})
@@ -316,3 +328,49 @@ def graph_portfolio():
     graph_data = [ {'time': row.time.strftime('%Y-%m-%d %H:%M:%S.'), 'value': row.value} for row in data ]
 
     return jsonify(graph_data)
+
+
+@main.route('/add_article', methods=['POST'])
+def add_article():
+    
+    # try:
+    stock_name = request.json['selected_stock'].upper()
+        # stock_name = 'AAPL'
+
+        # # Use query attribute of News_Item model to create the query
+    news_item = News_Item.query.filter_by(stock_name=stock_name).first()
+
+    
+    # news_item = True
+    if not news_item:
+        article_data = news_search(stock_name)[0]
+
+        new_article = News_Item(stock_name=stock_name, article_name= article_data['title'], article_description= article_data['description'], url= article_data['url'], image= article_data['image'], publisher_url= article_data['source']['url'], publisher_name= article_data['source']['name'])
+
+        db.session.add(new_article)
+        db.session.commit()
+
+        news_item = News_Item.query.filter_by(stock_name=stock_name).first()
+        return 'added'
+    
+    return 'element already added'
+        # return jsonify({'news_article': {'stock_name': news_item.stock_name, 'article_name': news_item.article_name, "article_description": news_item.article_description, "url": news_item.url, "image": news_item.image, "publisher_url": news_item.publisher_url, 'publisher_name': news_item.publisher_name}})
+
+@main.route('/get_article', methods=['GET'])
+def get_article():
+
+    # stock_name = request.json['selected_stock'].upper()
+
+    stock_name = request.args.get('selected_stock', '').upper()
+
+
+    news_item = News_Item.query.filter_by(stock_name=stock_name).first()
+
+    return jsonify({'news_article': {'stock_name': news_item.stock_name, 'article_name': news_item.article_name, "article_description": news_item.article_description, "url": news_item.url, "image": news_item.image, "publisher_url": news_item.publisher_url, 'publisher_name': news_item.publisher_name}})
+
+
+
+
+
+
+

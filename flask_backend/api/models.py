@@ -30,7 +30,20 @@ class Portfolio_Log(db.Model):
     change = db.Column(db.Float)
     percent_change = db.Column(db.Float)
 
+class News_Item(db.Model):
+
+    __tablename__ = 'News_Articles'
+    id = db.Column(db.Integer, primary_key = True)
+    time = db.Column(db.TIMESTAMP, default=lambda: datetime.now(timezone('EST')))
+    stock_name = db.Column(db.String(16))
+    article_name = db.Column(db.String)
+    article_description = db.Column(db.String)
+    url = db.Column(db.String)
+    image = db.Column(db.String)
+    publisher_url = db.Column(db.String)
+    publisher_name = db.Column(db.String)
 
 
+    
 
 

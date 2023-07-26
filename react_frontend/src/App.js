@@ -4,12 +4,13 @@ import React, {useEffect, useState} from "react"
 import {Stocks} from './components/stocks'
 import {Search} from './components/search'
 import GraphComponent from './components/portfolio_graph';
+import NewsComponent from './components/news_article';
 
 function App() {
 
   const[stocks, set_stocks] = useState([])
 
-  const[selected_stock, set_selected_stock] = useState('')
+  const[selected_stock, set_selected_stock] = useState('portfolio')
 
   // const submitTemp = () => {
 
@@ -21,6 +22,7 @@ function App() {
   //   })
   // }
 
+  // console.log(selected_stock)
 
   useEffect(() => {
     fetch("/get_data").then(response =>
@@ -33,19 +35,35 @@ function App() {
 
   return (
     <div className="App">
-      <div className='mt-10 mb-10'>
-        <h1 className=' flex text-6xl p-2 text-white  justify-center'>Trackr</h1>
-      </div>
-      
-      <div className='mt-5 flex'>
+      {/* <div className='mt-10 mb-10'> */}
 
-        <div className='flex flex-col'>
-          <Search></Search>
-          <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
+      
+        
+      {/* </div> */}
+
+      
+      <h1 className=' flex text-6xl p-2 text-white justify-center'>Trackr</h1>
+
+      
+      
+      <div className='mt-5 flex  h-full'>
+        <div className='flex flex-col  h-full'>
+          <div>
+            <Search></Search>
+          </div>
+    
+          <div className=' h-full w-96 overflow-y-auto'>
+            <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
+          </div>
+          
         </div>
         
-        <div className='flex h-screen w-full'>
-          <GraphComponent></GraphComponent>
+        <div className='flex h-full w-full flex-col '>
+          
+          {selected_stock === 'portfolio' ? <GraphComponent></GraphComponent> : null}
+
+          {(selected_stock === 'portfolio' || selected_stock === 'none') ? null : <NewsComponent selected_stock={selected_stock}></NewsComponent>}
+    
         </div>
         
 
