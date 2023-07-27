@@ -46,9 +46,10 @@ export const Search = () => {
       await check_response.json()
       .then(data => {
         setValid(data.validity)
-        console.log(valid)
+        console.log('is the stock valid:', valid)
       })
 
+      // stockExists is false when the stock has not already been added
       const added_response = await fetch('/already_added', {
         method: 'POST',
         headers: {
@@ -60,10 +61,11 @@ export const Search = () => {
       await added_response.json()
       .then(data => {
         setStockExists(data.added)
+        console.log('has it been added', data.added)
       })
 
 
-      console.log(isErrorVisible)
+      console.log('is the error message visible:', isErrorVisible)
       if(valid===true && stockExists === false && amount !== 0){
 
         setErrorVisible(false)
@@ -92,7 +94,7 @@ export const Search = () => {
       }
 
       } catch (error) {
-        console.error(error);
+        console.error('this is an error', error);
       }
   };
 
