@@ -93,12 +93,12 @@ const GraphComponent = () => {
         
         <div className='flex flex-col'>
             <div className='flex'>
-                <p className='text-white ml-40 mr-3 mb-16 font-bold text-2xl '>Portfolio Percentage Growth to Date:</p>
+                <p className='text-white ml-32 mr-3 mb-16 font-bold text-2xl '>Portfolio Percentage Growth to Date:</p>
                 <p className={` text-2xl ${portfolioInformation.percent_change > 0 ? 'text-green-500' : portfolioInformation.percent_change == 0 ? 'text-white' : 'text-red-500'}`}> {portfolioInformation.percent_change} %</p>
             </div>
            
             <div className='flex'>
-                <p className='text-white ml-40 mr-3 font-bold text-2xl '>Portfolio Value Increase to Date:</p>
+                <p className='text-white ml-32 mr-3 font-bold text-2xl '>Portfolio Value Increase to Date:</p>
                 <p className={` text-2xl ${portfolioInformation.value > 0 ? 'text-green-500' : portfolioInformation.value == 0 ? 'text-white' : 'text-red-500'}`}> $ {Number(portfolioInformation.value).toFixed(2)} USD</p>
             </div>
            
