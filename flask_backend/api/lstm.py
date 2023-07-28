@@ -7,11 +7,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 from copy import deepcopy
+import requests
+import json
 
+# df = pd.read_csv('/Users/ernest/Documents/GitHub/portfolio-predictions/flask_backend/api/amzn.csv')
+# df = df[['Date', 'Close']]
 
-df = pd.read_csv('/Users/ernest/Documents/GitHub/portfolio-predictions/flask_backend/api/amzn.csv')
-df = df[['Date', 'Close']]
+print("input a stock symbol: ")
+x = input()
 
+url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol='+x+'&outputsize=full&apikey=JU7L288S6R939NEC'
+r = requests.get(url)
+
+data = r.json()
+
+with open( "data_file.json" , "w" ) as write:
+    json.dump( data["Time Series (Daily)"] , write )
+
+with open("data_file.json", "r") as read_content:
+    stock_dict = json.load(read_content)
+    dates = []
+    dates_keys = stock_dict.keys()
+    for key in dates_keys:
+        dates.append(key)
+    # df = pd.DataFrame(dates, columns=["dates"])
+    # print(df)
+    val = stock_dict.values()
+    close = []
+
+    for value in val:
+        close.append(float(value["5. adjusted close"]))
+        
+    
+    
+    list_of_tuples = list(zip(dates, close))
+
+    df = pd.DataFrame(list_of_tuples,
+                  columns=['Date', 'Close']) 
+    
+    df= df.loc[::-1]
 # convert date from str to int
 def str_to_datetime(s):
   split = s.split('-')
