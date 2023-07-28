@@ -60,7 +60,7 @@ export const Stocks = ({ stocks, on_select_stock, selected_stock }) => {
     <div className="flex overflow-y-auto h-full">
       <ul className="space-y-1 w-80 ml-4 mt-10 mb-10">
 
-          <button className={`flex flex-col bg-gradient-to-r from-blue-700 to-blue-800 rounded-lg shadow-xl h-40 w-80 hover:from-blue-800 hover:to-blue-800 p-3 m-1 mb-6 ${selected_stock === 'portfolio' ? 'border-2 border-blue-500 from-blue-800 to-blue-800' : 'border-transparent border-2'}`} onClick={() => { on_select_stock('portfolio'); }}>
+          <button className={`flex flex-col neumorphic-shadow bg-gradient-to-r from-blue-700 to-blue-800 rounded-lg shadow-xl h-40 w-80 hover:from-blue-800 hover:to-blue-800 p-3 m-1 mb-6 ${selected_stock === 'portfolio' ? 'border-2 border-blue-500 from-blue-800 to-blue-800' : 'border-transparent border-2'}`} onClick={() => { on_select_stock('portfolio'); }}>
             <h2 className="text-2xl text-white flex-1">My Portfolio</h2>
             <p className="text-xl text-white font-medium mt-2">Value: {value.toFixed(2)}</p>
 
