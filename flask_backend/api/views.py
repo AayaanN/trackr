@@ -1,11 +1,5 @@
-# from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request
 import random
-import requests
-import numpy as np
-import pandas as pd
-from pandas.io.json import json_normalize
-import json
-import matplotlib.pyplot as plt
 from .models import Stock, Portfolio_Log
 from . import db
 import string
@@ -117,62 +111,10 @@ def add_data():
 
 #     return 'added'
 
+@main.route('/get_data', methods = ['GET'])
 
-url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AMZN&outputsize=full&apikey=JU7L288S6R939NEC'
-r = requests.get(url)
+def get_data():
 
-data = r.json()
-
-with open( "data_file.json" , "w" ) as write:
-    json.dump( data["Time Series (Daily)"] , write )
-
-with open("data_file.json", "r") as read_content:
-    stock_dict = json.load(read_content)
-    dates = []
-    dates_keys = stock_dict.keys()
-    for key in dates_keys:
-        dates.append(key)
-    # df = pd.DataFrame(dates, columns=["dates"])
-    # print(df)
-    val = stock_dict.values()
-    close = []
-
-    for value in val:
-        close.append(float(value["5. adjusted close"]))
-        
-    
-    
-    list_of_tuples = list(zip(dates, close))
-
-    df = pd.DataFrame(list_of_tuples,
-                  columns=['Date', 'Close']) 
-    
-    df= df.loc[::-1]
-    df.index = df.pop('Date')
-
-    
-    print(df)
-
-    plt.plot(df.index, df['Close'])
-
-    plt.show()
-
-# print(data)
-# data = r.json()
-# with open(data) as country_json1:
-#   country_dict = json.load(country_json1)
-#   print(country_dict)
-# json.load(data['Time Series (Daily)'])
-
-# df = pd.json_normalize(data['Time Series (Daily)']) 
-
-# df.drop("3. low")
-
-# print(df)
-
-# numpy_2d_arrays = np.array(dict["data"])
-
-# print(numpy_2d_arrays)
     # stocks = [{'name':'AAPL', 'price': 200}, {'name':'AMZN', 'price': 300}]
 
     stock_list = Stock.query.order_by(Stock.id).all()
@@ -192,7 +134,7 @@ def get_portfolio():
 
     portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.id)).first()
 
-    return jsonify({'portfolio':[{'time': portfolio.time, 'change': portfolio.change, 'percent_change': portfolio.percent_change, 'initial_value': portfolio.initial_value, 'value': portfolio.value}]})
+    return jsonify({'portfolio':{'time': portfolio.time, 'change': portfolio.change, 'percent_change': portfolio.percent_change, 'initial_value': portfolio.initial_value, 'value': portfolio.value}})
 
 
 @main.route('/check_stock', methods = ['POST'])
