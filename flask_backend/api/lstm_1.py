@@ -179,8 +179,8 @@ def number_of_days_display(days, df):
       return df.tail(1,825)
       
 
-def lstm_main():
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AMZN&outputsize=full&apikey=JU7L288S6R939NEC'
+def lstm_main(stock):
+    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={stock}&outputsize=full&apikey=JU7L288S6R939NEC'
     r = requests.get(url)
 
     data = r.json()
@@ -265,6 +265,3 @@ def lstm_main():
 
     # print(full_graph)
 
-
-
-lstm_main()
