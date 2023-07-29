@@ -34,41 +34,41 @@ function App() {
 
 
   return (
-    <div className="App">
-      {/* <div className='mt-10 mb-10'> */}
+    <div className="App min-h-screen ">
 
       
-        
-      {/* </div> */}
+      <div className='mt-5 flex flex-col h-full'>
 
-      <div className='mb-10'>
-        <h1 className=' flex text-6xl p-2 text-white justify-center'>Trackr</h1>
-      </div>
-      
+        <div className='h-[calc(100%/7)]'>
+          <h1 className=' flex text-6xl p-2 text-white justify-center'>Trackr</h1>
+        </div>
 
+        <div className='flex h-[calc(600%/7)]'>
+
+          <div className='flex flex-col  h-full'>
+            <div>
+              <Search></Search>
+            </div>
       
-      
-      <div className='mt-5 flex  h-full'>
-        <div className='flex flex-col  h-full'>
-          <div>
-            <Search></Search>
-          </div>
-    
-          <div className=' h-full w-96 overflow-y-auto'>
-            <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
+            <div className=' h-full w-96 overflow-y-auto'>
+              <Stocks stocks={stocks} on_select_stock={set_selected_stock} selected_stock={selected_stock}/>
+            </div>
+            
           </div>
           
-        </div>
-        
-        <div className='flex h-full w-full flex-col '>
-          
-          {selected_stock === 'portfolio' ? <GraphComponent></GraphComponent> : null}
+          <div className='flex h-full w-full flex-col '>
+            
+            {selected_stock === 'portfolio' ? <GraphComponent></GraphComponent> : null}
 
-          {(selected_stock === 'portfolio' || selected_stock === 'none') ? null : <NewsComponent selected_stock={selected_stock}></NewsComponent>}
-    
-        </div>
-        
+            {(selected_stock === 'portfolio' || selected_stock === 'none') ? null : <NewsComponent selected_stock={selected_stock}></NewsComponent>}
+      
+          </div>
 
+        </div>
+
+        <div>
+          <p className='text-gray-600 border-2 border-gray-900'>Aayaan Naqvi and Ernest Wang, 2023</p>
+        </div>
 
       </div>
   
