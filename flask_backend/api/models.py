@@ -43,6 +43,18 @@ class News_Item(db.Model):
     publisher_url = db.Column(db.String)
     publisher_name = db.Column(db.String)
 
+class StockData(db.Model):
+
+    __tablename__ = 'Stock_Prices'
+    id = db.Column(db.Integer, primary_key=True)
+    stock_name = db.Column(db.String(16), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f"<StockData {self.symbol} - {self.date}>"
+
+
 
     
 
