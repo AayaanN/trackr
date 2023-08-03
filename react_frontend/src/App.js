@@ -5,6 +5,7 @@ import {Stocks} from './components/stocks'
 import {Search} from './components/search'
 import GraphComponent from './components/portfolio_graph';
 import NewsComponent from './components/news_article';
+import StockGraphComponent from './components/stock_graph';
 
 function App() {
 
@@ -58,7 +59,7 @@ function App() {
           
           <div className='flex h-full w-full flex-col '>
             
-            {selected_stock === 'portfolio' ? <GraphComponent></GraphComponent> : null}
+            {selected_stock === 'portfolio' ? <GraphComponent></GraphComponent> : <StockGraphComponent selected_stock={selected_stock}></StockGraphComponent>}
 
             {(selected_stock === 'portfolio' || selected_stock === 'none') ? null : <NewsComponent selected_stock={selected_stock}></NewsComponent>}
       
@@ -66,8 +67,8 @@ function App() {
 
         </div>
 
-        <div>
-          <p className='text-gray-600 border-2 border-gray-900'>Aayaan Naqvi and Ernest Wang, 2023</p>
+        <div className='mt-2'>
+          <p className='text-gray-600 border-[1px] border-gray-900'>Aayaan Naqvi and Ernest Wang, 2023</p>
         </div>
 
       </div>
