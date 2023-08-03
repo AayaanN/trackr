@@ -6,9 +6,13 @@ api_key = ["DNWQMLFC43J1PHDI", "K62KTSJBG30692AL", 'OTKHLLKZ9SXFZUHP']
 
 
 
-url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={name_data}&apikey={api_key[1]}'
+url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={name_data}&interval=5min&outputsize=full&apikey={api_key[0]}'
+url2 = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={name_data}&apikey={api_key}"
 
-response = requests.get(url)
+response = requests.get(url2)
 data = response.json()
 
-print(data)
+for key in data:
+    print(key)
+
+print(data['Time Series (Daily)'])
