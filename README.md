@@ -19,7 +19,7 @@ Trackr is a web-app that aims to make it easier to track stocks, with an intuiti
 Flask, React, PostgreSQL, Tailwind CSS
 
 ### Demo
-![Alt Text]([https://media.giphy.com/media/7YSJ8yFQQUTCl2kbMH/giphy.gif]) <br /> <br /> <br />
+![Alt Text](https://media.giphy.com/media/1QwCH57mjAnYDKnP7B/giphy.gif) <br /> <br /> <br />
 
 
 ### Contributors
