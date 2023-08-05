@@ -6,12 +6,12 @@ Trackr is a web-app that aims to make it easier to track stocks, with an intuiti
 
 ## Setup (deploying soon!)
 
-### Clone repository
-### new terminal --> cd flask_backend
-### export FLASK_APP=api
-### flask run
-### new terminal --> cd react_frontend
-### npm start
+Clone repository
+new terminal --> cd flask_backend
+export FLASK_APP=api
+flask run
+new terminal --> cd react_frontend
+npm start
 
 ### Enjoy!
 
