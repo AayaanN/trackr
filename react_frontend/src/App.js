@@ -33,6 +33,14 @@ function App() {
     );
   }, [stocks]);
 
+  useEffect(() => {
+    fetch("/daily_update", {
+      method: 'POST'
+    }).then(
+      console.log('daily updated')
+    )
+  }, []);
+
 
   return (
     <div className="App min-h-screen ">
