@@ -93,12 +93,12 @@ const GraphComponent = () => {
         
         <div className='flex flex-col'>
             <div className='flex'>
-                <p className='text-white ml-32 mr-3 mb-16 font-bold text-2xl '>Portfolio Percentage Growth to Date:</p>
-                <p className={` text-2xl ${portfolioInformation.percent_change > 0 ? 'text-green-500' : portfolioInformation.percent_change == 0 ? 'text-white' : 'text-red-500'}`}> {portfolioInformation.percent_change} %</p>
+                <p className='text-white ml-24 mr-3 mb-16 font-bold text-2xl '>Portfolio Percentage Growth to Date:</p>
+                <p className={` text-2xl ${portfolioInformation.percent_change > 0 ? 'text-green-500' : portfolioInformation.percent_change == 0 ? 'text-white' : 'text-red-500'}`}> {Number(portfolioInformation.percent_change).toFixed(2)} %</p>
             </div>
            
             <div className='flex'>
-                <p className='text-white ml-32 mr-3 font-bold text-2xl '>Portfolio Value Increase to Date:</p>
+                <p className='text-white ml-24 mr-3 font-bold text-2xl '>Portfolio Value Increase to Date:</p>
                 <p className={` text-2xl ${portfolioInformation.value > 0 ? 'text-green-500' : portfolioInformation.value == 0 ? 'text-white' : 'text-red-500'}`}> $ {Number(portfolioInformation.value).toFixed(2)} USD</p>
             </div>
            
@@ -106,7 +106,7 @@ const GraphComponent = () => {
 
         <div className='flex ml-20'>
             <p className='text-white  mr-3 font-bold text-2xl'>Portfolio Actual Growth to Date:</p>
-            <p className= {`text-2xl  ${portfolioInformation.change > 0 ? 'text-green-500' : portfolioInformation.change == 0 ? 'text-white' : 'text-red-500'}`}> $ {portfolioInformation.change} USD</p>
+            <p className= {`text-2xl  ${portfolioInformation.change > 0 ? 'text-green-500' : portfolioInformation.change == 0 ? 'text-white' : 'text-red-500'}`}> $ {Number(portfolioInformation.change).toFixed(2)} USD</p>
         </div>
      
       </div>
