@@ -9,8 +9,13 @@ import json
 import urllib.request
 from .search_logic import news_search
 from datetime import datetime, timedelta
+import apscheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+from pytz import timezone
 
-api_key = 'OTKHLLKZ9SXFZUHP'
+
+# api_key = 'OTKHLLKZ9SXFZUHP'
+api_key = 'DNWQMLFC43J1PHDI'
 
 
 main = Blueprint('main', __name__)
@@ -49,7 +54,7 @@ def add_data():
 
         value = average_price * amount_data
 
-        new_stock = Stock(name = name_data, price = current_price, prev_price=previous_close, change=change, percent_change=percent_change, amount=amount_data, price_bought_at=price_bought_at, average_price=average_price, value=value)
+        new_stock = Stock(name = name_data, price = current_price, prev_price=previous_close, change=change, percent_change=percent_change, amount=amount_data, price_bought_at=price_bought_at, average_price=average_price, value=value, date_updated = datetime.now(timezone('EST')).date())
         
         #adding to portfolio db
         new_value = portfolio.value + value
@@ -314,7 +319,7 @@ def get_stock_prices():
     stock_symbol = request.args.get('stock_name')
     # stock_symbol = 'AAPL'
     
-    one_week_ago = datetime.now() - timedelta(days=7)
+    one_week_ago = datetime.now() - timedelta(days=14)
 
     stock_data = StockData.query.filter_by(stock_name=stock_symbol).filter(StockData.date >= one_week_ago).order_by(StockData.date.asc()).all()
 
@@ -339,3 +344,39 @@ def get_stock_prices():
 
     return jsonify(result)
 
+@main.route('/daily_update', methods=['POST', 'PUT'])
+def daily_update():
+    list_of_stocks = [stock.name for stock in Stock.query.all()]
+
+    for stock in list_of_stocks:
+        # stocks.append(stock.name)
+        row = Stock.query.filter_by(name=stock).order_by(Stock.id).first()
+        old_portfolio = Portfolio_Log.query.order_by(desc(Portfolio_Log.time)).first()
+
+        if (row.date_updated == None) or (row.date_updated != datetime.now(timezone('EST')).date()):
+            url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock}&apikey={api_key}'
+            
+            response = requests.get(url)
+            data = response.json()
+            stock_data = data['Global Quote']
+
+            row.date_updated = datetime.now(timezone('EST')).date()
+            row.time = datetime.now(timezone('EST'))
+            row.price = float(stock_data['05. price']) + 0.00
+            previous_close = float(stock_data['08. previous close'])
+            row.change = float(stock_data['05. price']) + 0.00 - previous_close
+            row.percent_change = ((float(stock_data['05. price']) + 0.00 - previous_close) / previous_close) * 100
+            row.average_price = float(stock_data['05. price']) + 0.00
+            row.value = (float(stock_data['05. price']) + 0.00) * row.amount
+
+            portfolio_change = float(stock_data['05. price']) + 0.00 - old_portfolio.initial_value
+            portfolio_percent_change = portfolio_change/old_portfolio.initial_value
+            
+            new_portfolio_log = Portfolio_Log(value=float(stock_data['05. price']) + 0.00, initial_value=old_portfolio.initial_value, change=portfolio_change, percent_change=portfolio_percent_change)
+
+            db.session.add(new_portfolio_log)
+
+    db.session.commit()
+
+
+    return 'ok'
