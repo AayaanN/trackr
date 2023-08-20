@@ -19,6 +19,7 @@ class Stock(db.Model):
     price_bought_at = db.Column(db.Float)
     average_price = db.Column(db.Float)
     value = db.Column(db.Float)
+    date_updated = db.Column(db.TIMESTAMP)
 
 class Portfolio_Log(db.Model):
     __tablename__ = 'Portfolio_Logs'
