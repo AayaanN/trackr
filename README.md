@@ -2,7 +2,7 @@ Trackr
 =========
 
 ## Introduction
-Trackr is a web-app that aims to make it easier to track stocks, with an intuitive interface, an LSTM model making predictions, links to relevant news, as well as a number of relevant statistics! 
+Trackr is a web-app that aims to make it easier to track stocks, with an intuitive interface, an LSTM neural network model making predictions, links to relevant news, as well as a number of relevant statistics! 
 
 ## Setup (deploying soon!)
 
